@@ -13,7 +13,7 @@ bot.on('message', async msg => {
 
 bot.on('callback_query', async msg => {
     if(msg.data === 'natal_card'){
-
+        
     }else if(msg.data === 'matrix'){
 
     }else if(msg.data === 'ascendent'){
@@ -24,6 +24,8 @@ bot.on('callback_query', async msg => {
 
     }else if(msg.data === 'success'){
 
+    }else{
+        await bot.sendMessage(msg.message.chat.id, "")
     }
 })
 
