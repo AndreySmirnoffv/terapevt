@@ -56,6 +56,7 @@ bot.on('callback_query', async msg => {
             await bot.sendMessage(msg.message.chat.id, `asd`)
             break;
         case parseInt(msg.data):
+            console.log("msg.data")
             await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
             // await bot.sendMessage(msg.message.chat.id, "hello world", dayOfBirth)
         case 'personal_garo':
