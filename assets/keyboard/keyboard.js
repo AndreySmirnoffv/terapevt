@@ -15,7 +15,6 @@ function generateYearKeyboard(bot, msg) {
         years.push(row);
     }
     years.push([{text: "<-", callback_data: "prevous"}, {text: "->", callback_data: "next"}]);
-    console.log(msg.data)
     generateMonthKeyboard(msg.data)
     return {
         reply_markup: JSON.stringify({
