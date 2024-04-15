@@ -27,54 +27,57 @@ bot.on('message', async msg => {
 })
 
 bot.on('callback_query', async msg => {
-    const yearOfBirth = generateYearKeyboard(msg)
-    const dayOfBirth = generateDayKeyboard(msg)
-    let user = db.find(user => user.username === msg.message.from.username)
+    let user = db.find(user => user.username === msg.message.from.username);
+    let yearOfBirth, dayOfBirth;
+
     switch(msg.data){
         case 'natal_cards':
-            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
-            await bot.sendMessage(msg.message.chat.id, `Отлично, сейчас нам нужно небольшую информацию о тебе, чтобы сделать карту специально под тебя!\n\nНужно ответить всего на пару вопросов✍️`, chooseOptions)
-            saveData(user?.username)
+            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
+            await bot.sendMessage(msg.message.chat.id, `Отлично, сейчас нам нужно небольшую информацию о тебе, чтобы сделать карту специально под тебя!\n\nНужно ответить всего на пару вопросов✍️`, chooseOptions);
+            saveData(user?.username);
             break;
         case 'create_card':
-            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
-            await bot.sendMessage(msg.message.chat.id, "Отлично, сейчас нам нужно небольшую информацию о тебе, чтобы сделать карту специально под тебя!\n\nНужно ответить всего на пару вопросов✍️", chooseGender)
+            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
+            await bot.sendMessage(msg.message.chat.id, "Отлично, сейчас нам нужно небольшую информацию о тебе, чтобы сделать карту специально под тебя!\n\nНужно ответить всего на пару вопросов✍️", chooseGender);
             break;
         case 'male':
-            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
-            await bot.sendMessage(msg.message.chat.id, "🗓Выбери свою дату рождения:", yearOfBirth)
+            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
+            await bot.sendMessage(msg.message.chat.id, "🗓Выбери свою дату рождения:", generateYearKeyboard(bot, msg));
+            console.log(msg);
             break;
         case 'female':
-            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
-            await bot.sendMessage(msg.message.chat.id, "🗓Выбери свою дату рождения:", yearOfBirth)
+            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
+            await bot.sendMessage(msg.message.chat.id, "🗓Выбери свою дату рождения:", generateYearKeyboard(bot, msg));
+            break;
         case 'matrix':
-            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
-            await bot.sendMessage(msg.message.chat.id, `asd`)
-            break
+            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
+            await bot.sendMessage(msg.message.chat.id, `asd`);
+            break;
         case 'ascendent':
-            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
-            await bot.sendMessage(msg.message.chat.id, `asd`)
+            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
+            await bot.sendMessage(msg.message.chat.id, `asd`);
             break;
         case parseInt(msg.data):
-            console.log("msg.data")
-            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
-            // await bot.sendMessage(msg.message.chat.id, "hello world", dayOfBirth)
+            console.log(msg);
+            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
+            await bot.sendMessage(msg.message.chat.id, "hello world", generateDayKeyboard(bot, msg));
+            break;
         case 'personal_garo':
-            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
-            await bot.sendMessage(msg.message.chat.id, `asd`)
+            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
+            await bot.sendMessage(msg.message.chat.id, `asd`);
             break;
         case 'relationship':
-            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
-            await bot.sendMessage(msg.message.chat.id, `asd`)
+            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
+            await bot.sendMessage(msg.message.chat.id, `asd`);
             break;
         case 'success':
-            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
-            await bot.sendMessage(msg.message.chat.id, `asd`)
+            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
+            await bot.sendMessage(msg.message.chat.id, `asd`);
             break;
         default:
-            await bot.sendMessage(msg.message.chat.id, msg.data)
+            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
+            generateDayKeyboard(bot, msg)
             break;
     }
-})
-
+});
 bot.on('polling_error', console.log)

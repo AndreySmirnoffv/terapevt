@@ -15,7 +15,15 @@ function generateYearKeyboard(bot, msg) {
         years.push(row);
     }
     years.push([{text: "<-", callback_data: "prevous"}, {text: "->", callback_data: "next"}]);
-    generateMonthKeyboard(msg.data)
+    // Pass msg.data to generateMonthKeyboard
+    bot.once('callback_query', async msg =>{
+        const monthKeyboard = generateMonthKeyboard(bot, msg.data)
+        console.log(msg.data)
+        if(parseInt(msg.data)){
+           await bot.sendMessage(msg.message.chat.id, "Выбирите месяц", monthKeyboard)
+        }
+    })
+    console.log(msg.data)
     return {
         reply_markup: JSON.stringify({
             inline_keyboard: years
@@ -24,9 +32,9 @@ function generateYearKeyboard(bot, msg) {
 }
 
 
-function generateMonthKeyboard(msg) {
+function generateMonthKeyboard(bot, data) { // Modify the function signature to accept bot and data
     const currentMonth = new Date().getMonth();
-
+    const dayKeyboard = generateDayKeyboard(bot, data)
     const months = [];
     let row = [];
     for (let month = 0; month < 12; month++) {
@@ -37,9 +45,16 @@ function generateMonthKeyboard(msg) {
         }
     }
 
-    months.push([{ text: "<-", callback_data: "prevous" }, { text: "->", callback_data: "next" }]);
+    months.push([{ text: currentMonth.toString(), callback_data: currentMonth.toString() }]);
     console.log(months)
-    generateDayKeyboard(msg.data)
+    bot.once('callback_query', async msg => {
+        if(parseInt(msg.data)){
+            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
+            await bot.sendMessage(msg.message.chat.id, "Выбирите день", dayKeyboard)
+        }
+    })
+    // Pass data to generateDayKeyboard
+    generateDayKeyboard(bot, data);
     return {
         reply_markup: JSON.stringify({
             inline_keyboard: months
@@ -47,7 +62,7 @@ function generateMonthKeyboard(msg) {
     };
 }
 
-function generateDayKeyboard(selectedMonth) {
+function generateDayKeyboard(bot, selectedMonth) { // Modify the function signature to accept bot and selectedMonth
     const daysInMonth = new Date(new Date().getFullYear(), selectedMonth + 1, 0).getDate();
 
     const days = [];
@@ -61,6 +76,12 @@ function generateDayKeyboard(selectedMonth) {
     }
 
     days.push([{ text: "<-", callback_data: "prevous" }, { text: "->", callback_data: "next" }]);
+    bot.once('callback_data', async selectedMonth => {
+        if (parseInt(msg.data)){
+            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
+            await bot.sendMessage(selectedMonth.message.chat.id, "hello world")
+        }
+    })
     console.log(days)
     return {
         reply_markup: JSON.stringify({
@@ -68,7 +89,6 @@ function generateDayKeyboard(selectedMonth) {
         })
     };
 }
-
 
 function saveButtonInfo(query){
     const buttonInfo = {
@@ -79,8 +99,6 @@ function saveButtonInfo(query){
 
     require('fs').writeFileSync('./assets/db/db.json', JSON.stringify(buttonInfo, null, '\t'))
 }
-
-
 
 
 module.exports = {
