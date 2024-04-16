@@ -1,12 +1,13 @@
 require('dotenv').config({path: "./assets/modules/.env"})
 const TelegramApi = require('node-telegram-bot-api')
 const bot = new TelegramApi(process.env.devStatus ? process.env.TEST_TOKEN : process.env.DEFAULT_TOKEN, {polling: true})
-const { startKeyboard, generateYearKeyboard, chooseOptions, chooseGender, generateDayKeyboard } = require('./assets/keyboard/keyboard')
+const { startKeyboard, generateYearKeyboard, chooseOptions, chooseGender, generateDayKeyboard, successKeyboard, endKeyboard } = require('./assets/keyboard/keyboard')
 const commands = JSON.parse(require('fs').readFileSync('./assets/commands/commands.json'))
 const db = require('./assets/db/db.json')
 const { saveData } = require('./assets/scripts/logic')
 
 bot.setMyCommands(commands)
+
 
 bot.on('message', async msg => {
     let user = db.find(user => user.username === msg.from.username)
@@ -19,6 +20,8 @@ bot.on('message', async msg => {
                 monthOfBearth: "",
                 dayOfBearth: "",
                 gender: "",
+                timeOfBirth: 0,
+                cityBirthIn: ""
             })
         }
         require('fs').writeFileSync('./assets/db/db.json', JSON.stringify(db, null, '\t'))
@@ -62,6 +65,8 @@ bot.on('callback_query', async msg => {
             await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
             await bot.sendMessage(msg.message.chat.id, "hello world", generateDayKeyboard(bot, msg));
             break;
+        case /^(0?[1-9]|[12][0-9]|3[01])$/.test(callbackData):
+            
         case 'personal_garo':
             await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
             await bot.sendMessage(msg.message.chat.id, `asd`);
@@ -74,9 +79,13 @@ bot.on('callback_query', async msg => {
             await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
             await bot.sendMessage(msg.message.chat.id, `asd`);
             break;
-        default:
+        case "successyes":
             await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
-            generateDayKeyboard(bot, msg)
+            await bot.sendPhoto('./assets/images/success.jpg', {caption: "Спасибо за твои ответы, вот что у нас получилось составить в твоей карте:\n\n✅ Сценарии судьбы в любой сфере вашей жизни.\n✅ Психологические характеристики.\n✅ Уровни развития в разных сферах жизни (в любой сфере у каждого есть своё дно и свой пик эволюции).\n✅ Причины и следствия выбора в разных сферах жизни (Карма).\n✅ Сильные и слабые стороны вашей личности.\n\nПолучи полную и понятную расшифровку👇", reply_markup: endKeyboard.reply_markup})
+        default:
+            // await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
+            await bot.sendMessage(msg.message.chat.id, "сработал блок дефолт")
+            // generateDayKeyboard(bot, msg)
             break;
     }
 });

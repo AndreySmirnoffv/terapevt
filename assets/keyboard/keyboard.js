@@ -78,7 +78,7 @@ function generateDayKeyboard(bot, selectedMonth) { // Modify the function signat
     days.push([{ text: "<-", callback_data: "prevous" }, { text: "->", callback_data: "next" }]);
     bot.once('callback_data', async selectedMonth => {
         if (parseInt(msg.data)){
-            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
+            await bot.deleteMessage(selectedMonth.message.chat.id, msg.message.message_id)
             await bot.sendMessage(selectedMonth.message.chat.id, "hello world")
         }
     })
@@ -128,6 +128,20 @@ module.exports = {
             inline_keyboard: [
                 [{text: "Женский 👱🏻‍♀️", callback_data: "female"}],
                 [{text: "Мужской 🤵🏻‍♂️", callback_data: "male"}]
+            ]
+        })
+    },
+    successKeyboard: {
+        reply_markup: JSON.stringify({
+            inline_keyboard: [
+                [{text: "Да, все верно✅", callback_data: "successyes"}, {text: "Нет, не верно❌", callback_data: "successno"}]
+            ]
+        })
+    },
+    endKeyboard: {
+        reply_markup: JSON.stringify({
+            inline_keyboard: [
+                [{text: "Получить свою рассшифровку", callback_data: "rass"}]
             ]
         })
     },
