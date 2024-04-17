@@ -23,6 +23,7 @@ function generateYearKeyboard(bot, msg) {
            await bot.sendMessage(msg.message.chat.id, "Выбирите месяц", monthKeyboard)
         }
     })
+    generateMonthKeyboard(bot, msg)
     console.log(msg.data)
     return {
         reply_markup: JSON.stringify({
@@ -76,10 +77,10 @@ function generateDayKeyboard(bot, selectedMonth) { // Modify the function signat
     }
 
     days.push([{ text: "<-", callback_data: "prevous" }, { text: "->", callback_data: "next" }]);
-    bot.once('callback_data', async selectedMonth => {
+    bot.once('callback_data', async msg => {
         if (parseInt(msg.data)){
-            await bot.deleteMessage(selectedMonth.message.chat.id, msg.message.message_id)
-            await bot.sendMessage(selectedMonth.message.chat.id, "hello world")
+            await bot.deleteMessage(msg.message.chat.id, msg.message.message_id)
+            await bot.sendMessage(msg.message.chat.id, "hello world")
         }
     })
     console.log(days)

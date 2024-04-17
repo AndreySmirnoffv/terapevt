@@ -15,7 +15,7 @@ function formatNumber(number) {
     return number < 10 ? '0' + number : number.toString();
 }
 
-async function askCityOfBirth(bot, msg, timeOfBearth){
+async function askCityOfBirth(bot, msg, timeOfBirth){
     let user = db.find(user => user.username === msg.from.username);
     let cityBirthIn = msg.text
     await bot.sendMessage(msg.chat.id, "Пришлите мне название города в котором вы родились")
@@ -24,8 +24,6 @@ async function askCityOfBirth(bot, msg, timeOfBearth){
         MonthOfBirth: user.MonthOfBirth || "",
         YearOfBirth: user.YearOfBirth || ""
     };
-
-    // Получаем день, месяц и год из объекта даты рождения
     const day = birthDate.dayOfBirth.length > 0 ? formatNumber(parseInt(birthDate.dayOfBirth)) : '';
     const month = birthDate.MonthOfBirth.length > 0 ? formatNumber(parseInt(birthDate.MonthOfBirth)) : '';
     const year = birthDate.YearOfBirth.length > 0 ? formatNumber(parseInt(birthDate.YearOfBirth)) : '';
@@ -33,9 +31,9 @@ async function askCityOfBirth(bot, msg, timeOfBearth){
     // Формируем строку с датой рождения в формате DD.MM.YY
     const formattedBirthDate = `${day}.${month}.${year}`;
 
-    let timeOfBearth = msg.text
+    timeOfBirth = msg.text
     await bot.sendMessage(msg.chat.id, "🕙Напиши своё время рождения:\n Например: 11:31\nЕсли не знаешь, то хотя бы приблизительное или жми кнопку 'Не знаю время рождения'")
-    user.cityOfBirth = timeOfBearth
+    user.cityOfBirth = timeOfBirth
     fs.writeFileSync('./assets/db/db.json', JSON.stringify(db, null, '\t'))
     success(bot, msg, user)
     await bot.sendMessage(msg.chat.id, "Отлично все твои ответы записаны !")
@@ -44,6 +42,11 @@ async function askCityOfBirth(bot, msg, timeOfBearth){
 
 }
 
+
 async function success(bot, msg, user){
 
+}
+
+module.exports = {
+    askTimeOfBirth: askTimeOfBirth
 }

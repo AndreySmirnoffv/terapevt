@@ -14,5 +14,14 @@
     "dotenv": "^16.4.5",
     "node-telegram-bot-api": "^0.65.1",
     "nodemon": "^3.1.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/AndreySmirnoffv/terapevt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AndreySmirnoffv/terapevt/issues"
+  },
+  "homepage": "https://github.com/AndreySmirnoffv/terapevt#readme",
+  "devDependencies": {}
 }

@@ -4,10 +4,9 @@ const bot = new TelegramApi(process.env.devStatus ? process.env.TEST_TOKEN : pro
 const { startKeyboard, generateYearKeyboard, chooseOptions, chooseGender, generateDayKeyboard, successKeyboard, endKeyboard } = require('./assets/keyboard/keyboard')
 const commands = JSON.parse(require('fs').readFileSync('./assets/commands/commands.json'))
 const db = require('./assets/db/db.json')
-const { saveData } = require('./assets/scripts/logic')
+const { askTimeOfBirth } = require('./assets/scripts/logic')
 
 bot.setMyCommands(commands)
-
 
 bot.on('message', async msg => {
     let user = db.find(user => user.username === msg.from.username)
@@ -37,7 +36,6 @@ bot.on('callback_query', async msg => {
         case 'natal_cards':
             await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
             await bot.sendMessage(msg.message.chat.id, `Отлично, сейчас нам нужно небольшую информацию о тебе, чтобы сделать карту специально под тебя!\n\nНужно ответить всего на пару вопросов✍️`, chooseOptions);
-            saveData(user?.username);
             break;
         case 'create_card':
             await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
@@ -65,8 +63,8 @@ bot.on('callback_query', async msg => {
             await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
             await bot.sendMessage(msg.message.chat.id, "hello world", generateDayKeyboard(bot, msg));
             break;
-        case /^(0?[1-9]|[12][0-9]|3[01])$/.test(callbackData):
-            
+        case /^(0?[1-9]|[12][0-9]|3[01])$/.test(msg):
+            askTimeOfBirth(bot, msg)
         case 'personal_garo':
             await bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
             await bot.sendMessage(msg.message.chat.id, `asd`);
